@@ -1,6 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
-import 'package:farmiq_app/screens/auth_screen.dart';
+import 'package:farmiq_app/screens/auth_check_screen.dart';
 
 void main() {
   runApp(const FarmIQApp());
@@ -19,7 +19,7 @@ class FarmIQApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFf2f1e6),
         fontFamily: 'Poppins',
       ),
-      home: AuthScreen(), // Or check for a saved token and redirect
+      home: AuthCheckScreen(), // Or check for a saved token and redirect
     );
   }
 }

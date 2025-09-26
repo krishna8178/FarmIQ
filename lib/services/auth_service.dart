@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logging/logging.dart'; // Import the logging package
 
 class AuthService {
@@ -29,7 +28,7 @@ class AuthService {
     }
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<String?> login(String email, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$_baseUrl/login'),
@@ -39,20 +38,16 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final token = data['token'];
-        if (token != null) {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', token);
-          return true;
-        }
+        // Return the token string on success
+        return data['token'];
       }
-      return false;
+      // Return null if login fails
+      return null;
     } on SocketException {
       _log.warning("Network error during login.");
-      return false;
+      return null;
     } catch (e, stackTrace) {
       _log.severe("An unexpected error occurred during login", e, stackTrace);
-      return false;
+      return null;
     }
-  }
-}
+  }}
