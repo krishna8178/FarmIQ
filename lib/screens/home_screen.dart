@@ -8,6 +8,8 @@ import 'package:farmiq_app/screens/disease_guide_screen.dart';
 import 'package:farmiq_app/screens/calculator_screen.dart';
 import 'package:farmiq_app/screens/chatbot_screen.dart';
 import 'package:farmiq_app/screens/profile_screen.dart';
+import 'package:farmiq_app/services/api_service.dart';
+import 'package:farmiq_app/utils/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,21 +18,37 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+
 class _HomeScreenState extends State<HomeScreen> {
   Future<Weather>? _weatherFuture;
+  // --- CHANGE 1: Add a state variable for the user's name ---
+  String? _userName;
 
   @override
   void initState() {
     super.initState();
     _weatherFuture = WeatherService().getWeather();
+    // --- CHANGE 2: Call a new method to load user data ---
+    _loadUserData();
+  }
+
+  // --- CHANGE 3: Create the method to fetch and set the user's name ---
+  Future<void> _loadUserData() async {
+    final user = await ApiService().getUserProfile();
+    if (user != null && mounted) {
+      setState(() {
+        _userName = user.name;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FARMIQ'),
-        backgroundColor: const Color(0xFF3b5d46),
+        // --- CHANGE 4: Display the user's name if available ---
+        title: Text(_userName != null ? 'Welcome, $_userName!' : 'FARMIQ'),
+        backgroundColor: kPrimaryColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -41,13 +59,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SingleChildScrollView(
+        // ... The rest of your body code remains the same ...
         child: Column(
           children: [
             _buildBanner(),
             _buildOptionsGrid(),
             _buildSectionTitle('Featured Products'),
             _buildFeaturedProducts(),
-            // You can continue adding other sections like "How It Works", etc.
           ],
         ),
       ),
@@ -60,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
+  // ... The rest of your helper methods (_buildBanner, etc.) remain the same ...
   Widget _buildBanner() {
     return Stack(
       alignment: Alignment.center,
@@ -115,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         final weather = snapshot.data!;
         return Card(
-          color: Colors.black.withOpacity(0.4),
+          color: Colors.black.withAlpha((0.4 * 255).round()),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

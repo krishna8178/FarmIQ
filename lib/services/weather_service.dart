@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:farmiq_app/models/weather.dart';
 
 class WeatherService {
-  final String _baseUrl = 'http://localhost:3000/api';
+  final String _baseUrl = 'http://10.0.2.2:3000/api';
   // You should hide your API keys, but for this example, we'll use it directly
   final String _openWeatherApiKey = '9c13f42072dbbf25d332b0dde6c11f4b';
 

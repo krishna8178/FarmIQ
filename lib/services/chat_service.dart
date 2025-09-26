@@ -5,7 +5,7 @@ class ChatService {
   late io.Socket socket;
 
   void connect() {
-    socket = io.io('http://localhost:3000', <String, dynamic>{
+    socket = io.io('http://10.0.2.2:3000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

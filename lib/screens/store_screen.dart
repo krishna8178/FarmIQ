@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:farmiq_app/models/product.dart';
 import 'package:farmiq_app/services/api_service.dart';
-import 'package:farmiq_app/widgets/product_card.dart'; // We will create this next
+import 'package:farmiq_app/widgets/product_card.dart';
+import 'package:farmiq_app/widgets/product_card_skeleton.dart'; // Import the new skeleton
+import 'package:shimmer/shimmer.dart'; // Import the shimmer package
 
 class StoreScreen extends StatefulWidget {
   const StoreScreen({super.key}) ;
@@ -17,7 +19,6 @@ class _StoreScreenState extends State<StoreScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch the products when the screen is first loaded
     _products = ApiService().getProducts();
   }
 
@@ -32,29 +33,40 @@ class _StoreScreenState extends State<StoreScreen> {
         future: _products,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // Show a loading indicator while fetching data
-            return const Center(child: CircularProgressIndicator());
+            // --- THIS IS THE IMPROVED LOADING UI ---
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: GridView.builder(
+                padding: const EdgeInsets.all(10.0),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                  childAspectRatio: 0.7, // Adjust to match skeleton card
+                ),
+                itemCount: 6, // Show 6 skeleton cards while loading
+                itemBuilder: (context, index) => const ProductCardSkeleton(),
+              ),
+            );
           } else if (snapshot.hasError) {
-            // Show an error message if something went wrong
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (snapshot.hasData) {
-            // If data is available, display it in a grid
+            // This is the UI when data is successfully loaded
             return GridView.builder(
               padding: const EdgeInsets.all(10.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 cards per row
+                crossAxisCount: 2,
                 crossAxisSpacing: 10.0,
                 mainAxisSpacing: 10.0,
-                childAspectRatio: 0.8, // Adjust aspect ratio for better look
+                childAspectRatio: 0.7,
               ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                // Use the ProductCard widget for each item
                 return ProductCard(product: snapshot.data![index]);
               },
             );
           }
-          // Default message if there's no data
           return const Center(child: Text("No products found."));
         },
       ),
