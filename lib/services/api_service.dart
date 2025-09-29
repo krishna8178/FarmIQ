@@ -42,8 +42,6 @@ class ApiService {
   }
 
   Future<List<Product>> getProducts() async {
-    // This delay is for testing the shimmer effect. You can remove it later.
-    await Future.delayed(const Duration(milliseconds: 200));
 
     final response = await http.get(Uri.parse('$_baseUrl/products'));
 
