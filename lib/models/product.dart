@@ -14,11 +14,15 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
+    final imageUrl = json['imageUrl'];
     return Product(
-      id: json['_id'],
-      name: json['name'],
-      imageUrl: json['imageUrl'],
-      price: (json['price'] as num).toDouble(),
+      id: json['_id'] ?? '',
+      name: json['name'] ?? 'No Name Available',
+      // This now checks if the URL is valid before using it.
+      imageUrl: (imageUrl != null && imageUrl.isNotEmpty)
+          ? imageUrl
+          : 'https://via.placeholder.com/150',
+      price: (json['price'] as num? ?? 0.0).toDouble(),
     );
   }
 }
