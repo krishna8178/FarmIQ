@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:farmiq_app/models/user.dart';
 import 'package:logging/logging.dart'; // 1. Import the package
+import 'package:farmiq_app/models/cart_model.dart';
 
 class ApiService {
   final String _baseUrl = 'http://10.0.2.2:3000/api';
@@ -51,5 +52,18 @@ class ApiService {
     } else {
       throw Exception('Failed to load products');
     }
+  }
+
+  Future<Cart> getCart() async {
+    // TODO: Implement actual API call
+    return Cart(id: '1', items: []);
+  }
+
+  Future<void> addToCart(String productId, {required int quantity}) async {
+    // TODO: Implement actual API call
+  }
+
+  Future<void> deleteFromCart(String cartItemId) async {
+    // TODO: Implement actual API call
   }
 }

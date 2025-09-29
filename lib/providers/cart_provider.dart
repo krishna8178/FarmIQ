@@ -1,52 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:farmiq_app/models/cart_model.dart';
-import 'package:farmiq_app/services/api_service.dart';
+import 'package:farmiq_app/models/product.dart';
 
-class CartProvider with ChangeNotifier {
-  final ApiService _apiService = ApiService();
-  Cart? _cart;
-  bool _isLoading = false;
+class ProductCard extends StatelessWidget {
+  final Product product;
+  const ProductCard({super.key, required this.product});
 
-  Cart? get cart => _cart;
-  bool get isLoading => _isLoading;
-
-  CartProvider() {
-    fetchCart();
-  }
-
-  Future<void> fetchCart() async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      _cart = await _apiService.getCart();
-    } catch (e) {
-      print(e); // In a real app, handle this error more gracefully
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
-
-  Future<void> addToCart(String productId, {int quantity = 1}) async {
-    try {
-      // --- THIS IS THE CORRECTED LINE ---
-      // We now explicitly name the 'quantity' parameter
-      await _apiService.addToCart(productId, quantity: quantity);
-
-      // After adding, refresh the cart to show the new item
-      await fetchCart();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> removeFromCart(String cartItemId) async {
-    try {
-      await _apiService.deleteFromCart(cartItemId);
-      // After removing, refresh the cart
-      await fetchCart();
-    } catch (e) {
-      print(e);
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Image.network( // Changed from Image.asset
+              product.imageUrl,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.agriculture, size: 50, color: Colors.grey),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Rs.${product.price.toStringAsFixed(2)}/kg',
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF3b5d46),
+              foregroundColor: Colors.white,
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            ),
+            child: const Text('Add to Cart'),
+          )
+        ],
+      ),
+    );
   }
 }
-

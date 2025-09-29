@@ -50,4 +50,5 @@ class AuthService {
       _log.severe("An unexpected error occurred during login", e, stackTrace);
       return null;
     }
-  }}
+  }
+}

@@ -1,8 +1,8 @@
 // lib/screens/auth_check_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:farmiq_app/screens/home_screen.dart';
-import 'package:farmiq_app/screens/auth_screen.dart';
+import 'package:farmiq_app/screens/main_layout.dart';
+import 'package:farmiq_app/screens/login_screen.dart';
 
 class AuthCheckScreen extends StatefulWidget {
   const AuthCheckScreen({super.key});
@@ -28,14 +28,14 @@ class _AuthCheckScreenState extends State<AuthCheckScreen> {
     if (!mounted) return;
 
     if (token != null) {
-      // If token exists, navigate to the HomeScreen
+      // If token exists, navigate to the MainLayout
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const MainLayout()),
       );
     } else {
-      // If no token, navigate to the AuthScreen
+      // If no token, navigate to the LoginScreen
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const AuthScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     }
   }

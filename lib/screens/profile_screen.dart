@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:farmiq_app/models/user_model.dart';      // Import the User class
+import 'package:farmiq_app/models/user.dart';      // Corrected Import
 import 'package:farmiq_app/services/api_service.dart';   // Import your API service
 import 'package:farmiq_app/screens/login_screen.dart';    // Import the Login screen for logout navigation
 
@@ -159,4 +159,3 @@ class InfoTile extends StatelessWidget {
     );
   }
 }
-
