@@ -17,7 +17,7 @@ class _AuthCheckScreenState extends State<AuthCheckScreen> {
     super.initState();
     // Use a short delay to allow the splash screen to be visible
     // while checking the token in the background.
-    Future.delayed(const Duration(seconds: 1), _checkAuthStatus);
+    Future.delayed(const Duration(milliseconds: 10), _checkAuthStatus);
   }
 
   Future<void> _checkAuthStatus() async {
