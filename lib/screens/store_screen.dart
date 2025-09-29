@@ -1,13 +1,12 @@
-// lib/screens/store_screen.dart
 import 'package:flutter/material.dart';
 import 'package:farmiq_app/models/product.dart';
 import 'package:farmiq_app/services/api_service.dart';
 import 'package:farmiq_app/widgets/product_card.dart';
-import 'package:farmiq_app/widgets/product_card_skeleton.dart'; // Import the new skeleton
-import 'package:shimmer/shimmer.dart'; // Import the shimmer package
+import 'package:farmiq_app/widgets/product_card_skeleton.dart';
+import 'package:shimmer/shimmer.dart';
 
 class StoreScreen extends StatefulWidget {
-  const StoreScreen({super.key}) ;
+  const StoreScreen({super.key});
 
   @override
   State<StoreScreen> createState() => _StoreScreenState();
@@ -33,7 +32,6 @@ class _StoreScreenState extends State<StoreScreen> {
         future: _products,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // --- THIS IS THE IMPROVED LOADING UI ---
             return Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
@@ -43,16 +41,15 @@ class _StoreScreenState extends State<StoreScreen> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
-                  childAspectRatio: 0.7, // Adjust to match skeleton card
+                  childAspectRatio: 0.7,
                 ),
-                itemCount: 6, // Show 6 skeleton cards while loading
+                itemCount: 6,
                 itemBuilder: (context, index) => const ProductCardSkeleton(),
               ),
             );
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (snapshot.hasData) {
-            // This is the UI when data is successfully loaded
             return GridView.builder(
               padding: const EdgeInsets.all(10.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -30,14 +30,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.3
-  shared_preferences: ^2.0.13
+  http: ^1.1.0
+  provider: ^6.1.1
+  shared_preferences: ^2.2.2
+  shimmer: ^3.0.0 # For saving the login token
   socket_io_client: ^2.0.0-beta-4
   image_picker: ^0.8.4+11
   intl: ^0.17.0
   logging: ^1.1.0
-  shimmer: ^2.0.0
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8

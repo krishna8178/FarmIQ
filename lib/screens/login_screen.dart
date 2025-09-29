@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:farmiq_app/services/auth_service.dart';
-import 'package:farmiq_app/screens/home_screen.dart';
 import 'package:farmiq_app/widgets/custom_button.dart';
 import 'package:farmiq_app/widgets/custom_textfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:farmiq_app/screens/main_layout.dart'; // Import the main layout
 
-// This is the public StatefulWidget
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  // This method creates the private state class
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-// This is the private State class, with the leading underscore
-class _AuthScreenState extends State<AuthScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
 
@@ -49,8 +46,9 @@ class _AuthScreenState extends State<AuthScreen> {
               await prefs.setString('token', token);
             }
             if (!mounted) return;
+            // --- THIS IS THE CORRECTED NAVIGATION ---
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              MaterialPageRoute(builder: (context) => const MainLayout()),
             );
           } else {
             setState(() {

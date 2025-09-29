@@ -1,4 +1,3 @@
-// lib/widgets/product_card_skeleton.dart
 import 'package:flutter/material.dart';
 
 class ProductCardSkeleton extends StatelessWidget {
@@ -7,35 +6,35 @@ class ProductCardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image placeholder
-          Container(
-            height: 120, // Adjust height to match your ProductCard
-            decoration: BoxDecoration(
-              color: Colors.black, // Shimmer will animate over this
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
-            ),
+          Expanded(
+            child: Container(color: Colors.white),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text line placeholders
-                Container(width: double.infinity, height: 16, color: Colors.black),
+                Container(
+                  height: 16,
+                  width: 100,
+                  color: Colors.white,
+                ),
                 const SizedBox(height: 8),
-                Container(width: 100, height: 14, color: Colors.black),
-                const SizedBox(height: 8),
-                // Button placeholder
-                Container(width: double.infinity, height: 36, color: Colors.black),
+                Container(
+                  height: 14,
+                  width: 60,
+                  color: Colors.white,
+                ),
               ],
             ),
           ),
+          Container(
+            height: 36,
+            color: Colors.white,
+          )
         ],
       ),
     );
