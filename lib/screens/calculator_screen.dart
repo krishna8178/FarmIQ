@@ -10,10 +10,19 @@ class CalculatorScreen extends StatelessWidget {
       length: 2, // The number of tabs
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Farm Calculators'),
+          // EDITED: Made AppBar title white and bold
+          title: const Text(
+            'Farm Calculators',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
           backgroundColor: const Color(0xFF3b5d46),
+          iconTheme: const IconThemeData(color: Colors.white), // Ensures back arrow is white
+          // EDITED: Made Tab text white and bold
           bottom: const TabBar(
             indicatorColor: Colors.white,
+            labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
             tabs: [
               Tab(text: 'Yield Calculator'),
               Tab(text: 'Fertilizer Calculator'),
@@ -22,7 +31,6 @@ class CalculatorScreen extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            // Each child corresponds to a tab
             _YieldCalculatorView(),
             _FertilizerCalculatorView(),
           ],
@@ -47,7 +55,6 @@ class _YieldCalculatorViewState extends State<_YieldCalculatorView> {
   String? _selectedCrop;
   String _yieldResult = '';
 
-  // Mock data for crop factors (yield per plant in kg)
   final Map<String, double> _cropFactors = {
     'Wheat': 0.002, 'Rice': 0.0025, 'Corn': 0.003, 'Sugarcane': 0.005,
   };
@@ -58,9 +65,7 @@ class _YieldCalculatorViewState extends State<_YieldCalculatorView> {
       final double density = double.tryParse(_densityController.text) ?? 0;
       final double cropFactor = _cropFactors[_selectedCrop!] ?? 0;
 
-      // Simple calculation: yield = area (in m^2) * density (plants/m^2) * yield/plant
-      // Assuming area is in acres, convert to m^2 (1 acre = 4046.86 m^2)
-      final double estimatedYield = (area * 4046.86 * density * cropFactor) / 1000; // in Tonnes
+      final double estimatedYield = (area * 4046.86 * density * cropFactor) / 1000;
 
       setState(() {
         _yieldResult = 'Estimated Yield: ${estimatedYield.toStringAsFixed(2)} Tonnes';
@@ -102,11 +107,20 @@ class _YieldCalculatorViewState extends State<_YieldCalculatorView> {
             ElevatedButton(
               onPressed: _calculateYield,
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF3b5d46), padding: const EdgeInsets.symmetric(vertical: 16)),
-              child: const Text('Calculate Yield', style: TextStyle(fontSize: 16)),
+              // EDITED: Made button text white and bold
+              child: const Text('Calculate', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
             ),
             const SizedBox(height: 30),
             if (_yieldResult.isNotEmpty)
-              Text(_yieldResult, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+              Text(
+                _yieldResult,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF3b5d46),
+                ),
+                textAlign: TextAlign.center,
+              ),
           ],
         ),
       ),
@@ -131,10 +145,9 @@ class _FertilizerCalculatorViewState extends State<_FertilizerCalculatorView> {
     if (_formKey.currentState!.validate()) {
       final double area = double.tryParse(_areaController.text) ?? 0;
 
-      // Simple mock calculation based on standard recommendations for 1 acre
-      final double nitrogen = area * 50; // 50 kg N per acre
-      final double phosphorus = area * 25; // 25 kg P per acre
-      final double potassium = area * 25; // 25 kg K per acre
+      final double nitrogen = area * 50;
+      final double phosphorus = area * 25;
+      final double potassium = area * 25;
 
       setState(() {
         _fertilizerResult = 'Recommended:\n'
@@ -166,11 +179,20 @@ class _FertilizerCalculatorViewState extends State<_FertilizerCalculatorView> {
             ElevatedButton(
               onPressed: _calculateFertilizer,
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF3b5d46), padding: const EdgeInsets.symmetric(vertical: 16)),
-              child: const Text('Calculate Fertilizer', style: TextStyle(fontSize: 16)),
+              // EDITED: Made button text white and bold
+              child: const Text('Calculate', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
             ),
             const SizedBox(height: 30),
             if (_fertilizerResult.isNotEmpty)
-              Text(_fertilizerResult, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+              Text(
+                _fertilizerResult,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF3b5d46),
+                ),
+                textAlign: TextAlign.center,
+              ),
           ],
         ),
       ),

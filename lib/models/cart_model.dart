@@ -26,7 +26,8 @@ class Cart {
 
   // Calculates the total price of all items in the cart
   double get totalPrice {
-    return items.fold(0.0, (sum, item) => sum + (item.product.price * item.quantity));
+    // Corrected to use priceCents
+    return items.fold(0.0, (sum, item) => sum + (item.product.priceCents * item.quantity));
   }
 
   factory Cart.fromJson(Map<String, dynamic> json) {

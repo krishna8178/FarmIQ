@@ -25,8 +25,10 @@ class _StoreScreenState extends State<StoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Our Store'),
+        title: const Text('Our Store',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
         backgroundColor: const Color(0xFF3b5d46),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: FutureBuilder<List<Product>>(
         future: _products,

@@ -17,8 +17,10 @@ class DiseaseGuideScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crop Disease Guide'),
+        title: const Text('Crop Disease Guide',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
         backgroundColor: const Color(0xFF3b5d46),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ListView.builder(
         itemCount: diseaseData.length,

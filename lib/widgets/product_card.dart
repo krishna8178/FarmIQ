@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:farmiq_app/models/product.dart';
+import 'package:intl/intl.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -7,6 +8,11 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormatter = NumberFormat.currency(locale: 'en_IN', symbol: '₹');
+
+    // --- THIS IS THE CORRECTED IMAGE URL ---
+    final proxiedImageUrl = 'http://10.0.2.2:3000/api/image-proxy?url=${Uri.encodeComponent(product.imageUrl)}';
+
     return Card(
       elevation: 3,
       clipBehavior: Clip.antiAlias,
@@ -14,10 +20,23 @@ class ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: Image.asset(
-              product.imageUrl,
+            child: Image.network(
+              proxiedImageUrl, // Use the new proxied URL
               fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) => const Icon(Icons.agriculture, size: 50, color: Colors.grey),
+              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                print("IMAGE ERROR: $error"); // Added for extra debugging
+                return const Icon(Icons.agriculture, size: 50, color: Colors.grey);
+              },
             ),
           ),
           Padding(
@@ -33,7 +52,7 @@ class ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Rs.${product.price.toStringAsFixed(2)}/kg',
+                  '${currencyFormatter.format(product.priceCents / 100)}/kg',
                   style: TextStyle(color: Colors.grey[700]),
                 ),
               ],

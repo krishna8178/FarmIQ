@@ -44,7 +44,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: const Text('My Profile',
+        ),
         backgroundColor: const Color(0xFF3b5d46), // Your theme color
         actions: [
           // Add a logout button to the top bar for easy access.

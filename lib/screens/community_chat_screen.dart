@@ -60,8 +60,10 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Community Chat'),
+        title: const Text('Community Chat',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
         backgroundColor: kPrimaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
