@@ -45,8 +45,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Profile',
-        ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
         backgroundColor: const Color(0xFF3b5d46), // Your theme color
+          iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           // Add a logout button to the top bar for easy access.
           IconButton(
@@ -114,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 InfoTile(icon: Icons.email, title: 'Email', value: user.email),
                 const SizedBox(height: 16),
-                InfoTile(icon: Icons.phone, title: 'Mobile', value: user.mobile ?? 'Not provided'),
+                InfoTile(icon: Icons.phone, title: 'Mobile', value: user.mobile),
               ],
             ),
           );

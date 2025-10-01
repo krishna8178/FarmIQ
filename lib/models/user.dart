@@ -2,13 +2,13 @@ class User {
   final String id;
   final String name;
   final String email;
-  final String? mobile; // Mobile is optional and can be null
+  final String mobile; // Mobile is optional and can be null
 
   User({
     required this.id,
     required this.name,
     required this.email,
-    this.mobile,
+    required this.mobile,
   });
 
   // This factory constructor creates a User object from JSON data.
@@ -18,7 +18,7 @@ class User {
       id: json['_id'] as String? ?? json['id'] as String? ?? '',
       name: json['name'] as String? ?? 'User', // Default to 'User' if name is null
       email: json['email'] as String? ?? '',
-      mobile: json['mobile'] as String?, // This will be null if not provided
+      mobile: json['mobile'] as String? ?? '', // This will be null if not provided
     );
   }
 }
