@@ -1,3 +1,4 @@
+// lib/models/cart_model.dart
 import 'package:farmiq_app/models/product.dart';
 
 // Represents a single item within the cart
@@ -11,7 +12,10 @@ class CartItem {
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
       id: json['id'],
-      quantity: json['quantity'],
+      // --- THIS IS THE FIX ---
+      // The server sends 'qty', but our model uses 'quantity'.
+      // This line correctly maps the data.
+      quantity: json['qty'] ?? 0,
       product: Product.fromJson(json['product']),
     );
   }
@@ -26,12 +30,11 @@ class Cart {
 
   // Calculates the total price of all items in the cart
   double get totalPrice {
-    // Corrected to use priceCents
     return items.fold(0.0, (sum, item) => sum + (item.product.priceCents * item.quantity));
   }
 
   factory Cart.fromJson(Map<String, dynamic> json) {
-    var itemsFromJson = json['items'] as List;
+    var itemsFromJson = json['items'] as List? ?? [];
     List<CartItem> itemList = itemsFromJson.map((i) => CartItem.fromJson(i)).toList();
 
     return Cart(

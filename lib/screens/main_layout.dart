@@ -1,8 +1,8 @@
 // lib/screens/main_layout.dart
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import 'support_screen.dart'; // Import the new support screen
-import 'profile_screen.dart';
+import 'support_screen.dart';
+import 'cart_screen.dart'; // Import the new cart screen
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
@@ -14,11 +14,11 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   int _selectedIndex = 0;
 
-  // Replace GuideScreen with SupportScreen
+  // Replace ProfileScreen with CartScreen
   static const List<Widget> _pages = <Widget>[
     HomeScreen(),
     SupportScreen(),
-    ProfileScreen(),
+    CartScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -42,16 +42,16 @@ class _MainLayoutState extends State<MainLayout> {
             activeIcon: Icon(Icons.home),
             label: 'Home',
           ),
-          // Change the icon and label for the support screen
           BottomNavigationBarItem(
             icon: Icon(Icons.support_agent_outlined),
             activeIcon: Icon(Icons.support_agent),
             label: 'Support',
           ),
+          // Change the icon and label for the cart screen
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.shopping_cart_outlined),
+            activeIcon: Icon(Icons.shopping_cart),
+            label: 'Cart',
           ),
         ],
       ),

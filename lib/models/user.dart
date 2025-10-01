@@ -18,7 +18,7 @@ class User {
       id: json['_id'] as String? ?? json['id'] as String? ?? '',
       name: json['name'] as String? ?? 'User', // Default to 'User' if name is null
       email: json['email'] as String? ?? '',
-      mobile: json['mobile'] as String? ?? '', // This will be null if not provided
+      mobile: json['phone'] as String? ?? '', // This will be null if not provided
     );
   }
 }

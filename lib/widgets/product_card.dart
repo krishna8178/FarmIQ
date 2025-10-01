@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:farmiq_app/models/product.dart';
+import 'package:farmiq_app/providers/cart_provider.dart';
 import 'package:intl/intl.dart';
 
 class ProductCard extends StatelessWidget {
@@ -9,8 +11,6 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currencyFormatter = NumberFormat.currency(locale: 'en_IN', symbol: '₹');
-
-    // --- THIS IS THE CORRECTED IMAGE URL ---
     final proxiedImageUrl = 'http://10.0.2.2:3000/api/image-proxy?url=${Uri.encodeComponent(product.imageUrl)}';
 
     return Card(
@@ -21,7 +21,7 @@ class ProductCard extends StatelessWidget {
         children: [
           Expanded(
             child: Image.network(
-              proxiedImageUrl, // Use the new proxied URL
+              proxiedImageUrl,
               fit: BoxFit.contain,
               loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                 if (loadingProgress == null) return child;
@@ -34,7 +34,6 @@ class ProductCard extends StatelessWidget {
                 );
               },
               errorBuilder: (context, error, stackTrace) {
-                print("IMAGE ERROR: $error"); // Added for extra debugging
                 return const Icon(Icons.agriculture, size: 50, color: Colors.grey);
               },
             ),
@@ -59,7 +58,16 @@ class ProductCard extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            // --- THIS IS THE CORRECTED CODE ---
+            onPressed: () {
+              Provider.of<CartProvider>(context, listen: false).addToCart(product.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${product.name} added to cart!'),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF3b5d46),
               foregroundColor: Colors.white,
