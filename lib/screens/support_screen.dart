@@ -1,134 +1,122 @@
-// lib/screens/support_screen.dart
 import 'package:flutter/material.dart';
-import 'package:farmiq_app/models/ngo_model.dart';
-import 'package:farmiq_app/services/api_service.dart';
-import 'package:farmiq_app/utils/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class SupportScreen extends StatefulWidget {
-  const SupportScreen({super.key});
+// A simple model to hold NGO data
+class Ngo {
+  final String name;
+  final String city;
+  final String? phone;
+  final String? email;
 
-  @override
-  State<SupportScreen> createState() => _SupportScreenState();
+  Ngo({required this.name, required this.city, this.phone, this.email});
 }
 
-class _SupportScreenState extends State<SupportScreen> {
-  final ApiService _apiService = ApiService();
-  List<NGO> _allNgos = [];
-  List<NGO> _filteredNgos = [];
-  bool _isLoading = true;
-  String? _selectedState;
-  final List<String> _states = ['Kerala', 'Punjab', 'Jharkhand'];
+class SupportScreen extends StatelessWidget {
+  const SupportScreen({super.key});
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchNgos();
-  }
-
-  Future<void> _fetchNgos() async {
-    try {
-      final ngos = await _apiService.getNgos();
-      if (mounted) {
-        setState(() {
-          _allNgos = ngos;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        // Handle error, e.g., show a snackbar
-      }
+  // Helper function to launch URLs (tel:, mailto:)
+  Future<void> _launchUrl(String urlString, BuildContext context) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch $urlString')),
+      );
     }
-  }
-
-  void _filterNgosByState(String? state) {
-    setState(() {
-      _selectedState = state;
-      if (state == null) {
-        _filteredNgos = [];
-      } else {
-        _filteredNgos =
-            _allNgos.where((ngo) => ngo.state.toLowerCase() == state.toLowerCase()).toList();
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Your list of NGOs for Kerala
+    final List<Ngo> keralaNgos = [
+      Ngo(name: 'Bharath Sevak Samaj (Kerala Pradesh)', city: 'Thiruvananthapuram', phone: '0471-433845'),
+      Ngo(name: 'Bodhi Vanitha Samajam', city: 'Thiruvananthapuram', phone: null), // Phone not available
+      Ngo(name: 'Bodhini Kalasamskarika Vedi', city: 'Alappuzha', phone: '9447727114'),
+      Ngo(name: 'Christian College', city: 'Alappuzha', email: 'christiancollege@gmail.com', phone: '9446974398'),
+      Ngo(name: 'FREED (Forum for Rural Environment and Economic Development)', city: 'Alappuzha', email: null, phone: '9995214442'),
+      Ngo(name: 'Gandhi Smaraka Grama Seva Kendram', city: 'Alappuzha', email: null, phone: '9447086549'),
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Support & NGOs',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
-        backgroundColor: kPrimaryColor,
+        title: const Text('Support & NGOs'),
+        backgroundColor: const Color(0xFF3b5d46),
+        automaticallyImplyLeading: false, // Removes back button
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: DropdownButtonFormField<String>(
-              value: _selectedState,
-              hint: const Text('Select a State'),
-              isExpanded: true,
-              items: _states.map((String state) {
-                return DropdownMenuItem<String>(
-                  value: state,
-                  child: Text(state),
-                );
-              }).toList(),
-              onChanged: _filterNgosByState,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Dropdown for selecting the state (currently static)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8.0),
+                border: Border.all(color: Colors.grey.shade400),
+              ),
+              child: DropdownButton<String>(
+                value: 'Kerala',
+                isExpanded: true,
+                underline: const SizedBox(), // Hides the default underline
+                onChanged: (String? newValue) {
+                  // TODO: Implement logic to switch between states
+                },
+                items: <String>['Kerala']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
             ),
-          ),
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedState == null
-                ? const Center(
-                child: Text('Please select a state to see NGOs.'))
-                : _filteredNgos.isEmpty
-                ? Center(
-                child: Text(
-                    'No NGOs found for $_selectedState.'))
-                : ListView.builder(
-              itemCount: _filteredNgos.length,
-              itemBuilder: (context, index) {
-                final ngo = _filteredNgos[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: ListTile(
-                    title: Text(ngo.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold)),
-                    subtitle: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: [
-                        if (ngo.description != null)
-                          Text(ngo.description!),
-                        if (ngo.city != null)
+            const SizedBox(height: 16),
+
+            // List of NGOs
+            Expanded(
+              child: ListView.builder(
+                itemCount: keralaNgos.length,
+                itemBuilder: (context, index) {
+                  final ngo = keralaNgos[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(ngo.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 8),
                           Text('City: ${ngo.city}'),
-                        if (ngo.contactEmail != null)
-                          Text('Email: ${ngo.contactEmail}'),
-                        if (ngo.contactPhone != null)
-                          Text('Phone: ${ngo.contactPhone}'),
-                      ],
+                          const SizedBox(height: 8),
+
+                          // --- INTERACTIVE CONTACT ROW ---
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              if (ngo.phone != null)
+                                TextButton.icon(
+                                  icon: const Icon(Icons.phone, size: 18),
+                                  label: Text(ngo.phone!),
+                                  onPressed: () => _launchUrl('tel:${ngo.phone}', context),
+                                ),
+                              if (ngo.email != null)
+                                TextButton.icon(
+                                  icon: const Icon(Icons.email, size: 18),
+                                  label: const Text('Email'),
+                                  onPressed: () => _launchUrl('mailto:${ngo.email}', context),
+                                ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                    isThreeLine: true,
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
