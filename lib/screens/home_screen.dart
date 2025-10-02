@@ -13,6 +13,7 @@ import 'package:farmiq_app/services/api_service.dart';
 import 'package:farmiq_app/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:farmiq_app/screens/login_screen.dart';
+import 'package:farmiq_app/screens/mandi_prices_screen.dart'; // Import the mandi prices screen
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,7 +24,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Future<Weather>? _weatherFuture;
-  // EDITED: Changed from String to hold the full User object
   User? _currentUser;
 
   @override
@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadUserData();
   }
 
-  // EDITED: Now saves the entire user object
   Future<void> _loadUserData() async {
     final user = await ApiService().getUserProfile();
     if (user != null && mounted) {
@@ -59,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // EDITED: Updated to use the _currentUser object
         title: Text(
           _currentUser != null ? 'Welcome, ${_currentUser!.name}!' : 'FARMIQ',
           style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
@@ -75,7 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      // EDITED: Updated the Drawer with UserAccountsDrawerHeader
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -103,6 +100,17 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.bar_chart_rounded),
+              title: const Text('Mandi Prices'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer first
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MandiPricesScreen()),
+                );
               },
             ),
             ListTile(
@@ -149,8 +157,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  // --- No changes below this line ---
 
   Widget _buildBanner() {
     return Container(
@@ -257,16 +263,17 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSpacing: 16,
         childAspectRatio: 1.2,
         children: [
-          _buildOptionCard('Community', Icons.people, () => Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityChatScreen()))),
-          _buildOptionCard('Products', Icons.store, () => Navigator.push(context, MaterialPageRoute(builder: (context) => const StoreScreen()))),
-          _buildOptionCard('Diseases', Icons.bug_report, () => Navigator.push(context, MaterialPageRoute(builder: (context) => DiseaseGuideScreen()))),
-          _buildOptionCard('Calculator', Icons.calculate, () => Navigator.push(context, MaterialPageRoute(builder: (context) => CalculatorScreen()))),
+          // Assumes you have these images in 'assets/images/'
+          _buildOptionCard('Community', 'assets/images/community.png', () => Navigator.push(context, MaterialPageRoute(builder: (context) => CommunityChatScreen()))),
+          _buildOptionCard('Products', 'assets/images/vegetables.png', () => Navigator.push(context, MaterialPageRoute(builder: (context) => const StoreScreen()))),
+          _buildOptionCard('Diseases', 'assets/images/syringe.png', () => Navigator.push(context, MaterialPageRoute(builder: (context) => DiseaseGuideScreen()))),
+          _buildOptionCard('Calculator', 'assets/images/calculator.png', () => Navigator.push(context, MaterialPageRoute(builder: (context) => CalculatorScreen()))),
         ],
       ),
     );
   }
 
-  Widget _buildOptionCard(String title, IconData icon, VoidCallback onTap) {
+  Widget _buildOptionCard(String title, String imagePath, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Card(
@@ -274,7 +281,15 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: const Color(0xFF3b5d46)),
+            Image.asset(
+              imagePath,
+              height: 50,
+              width: 50,
+              errorBuilder: (context, error, stackTrace) {
+                // Shows an icon if the image fails to load
+                return Icon(Icons.image_not_supported, size: 40, color: Colors.grey);
+              },
+            ),
             const SizedBox(height: 10),
             Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
@@ -316,7 +331,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(imagePath, height: 60),
+            Image.asset(
+              imagePath,
+              height: 60,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(Icons.image_not_supported, size: 50, color: Colors.grey);
+              },
+            ),
             const SizedBox(height: 8),
             Text(name, textAlign: TextAlign.center),
           ],

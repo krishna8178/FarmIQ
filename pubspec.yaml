@@ -29,8 +29,13 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
+    uses-material-design: true
+
+    # To add assets to your application, add an assets section, like this:
+    assets:
+      - assets/images/
     sdk: flutter
-  http: ^1.1.0
+  http: ^1.2.1
   url_launcher: ^6.2.6
   provider: ^6.1.1
   shared_preferences: ^2.2.2
