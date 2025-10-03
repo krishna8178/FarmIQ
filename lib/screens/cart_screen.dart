@@ -41,19 +41,20 @@ class CartScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     child: ListTile(
                       leading: Image.network(
-                        // Using the image proxy for product images
-                        'http://10.0.2.2:3000/api/products/image-proxy?url=${Uri.encodeComponent(item.product.imageUrl)}',
+                        // --- THIS IS THE CORRECTED LINE ---
+                        'http://10.0.2.2:3000/api/image-proxy?url=${Uri.encodeComponent(item.product.imageUrl)}',
                         width: 50,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                        errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.image_not_supported),
                       ),
                       title: Text(item.product.name),
                       subtitle: Text('Qty: ${item.quantity}'),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
-                          // Call provider to remove item
-                          Provider.of<CartProvider>(context, listen: false).removeFromCart(item.id);
+                          Provider.of<CartProvider>(context, listen: false)
+                              .removeFromCart(item.id);
                         },
                       ),
                     ),
@@ -68,7 +69,8 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCheckoutSection(BuildContext context, Cart cart, NumberFormat currencyFormatter) {
+  Widget _buildCheckoutSection(
+      BuildContext context, Cart cart, NumberFormat currencyFormatter) {
     return Container(
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
@@ -89,22 +91,27 @@ class CartScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              const Text('Total', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Text('Total',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Text(
                 currencyFormatter.format(cart.totalPrice / 100),
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: kPrimaryColor),
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: kPrimaryColor),
               ),
             ],
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: cart.items.isEmpty ? null : () {
+            onPressed: cart.items.isEmpty
+                ? null
+                : () {
               // TODO: Implement checkout logic
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: kPrimaryColor,
-                padding: const EdgeInsets.symmetric(vertical: 16)
-            ),
+                padding: const EdgeInsets.symmetric(vertical: 16)),
             child: const Text(
               'PROCEED TO CHECKOUT',
               style: TextStyle(fontSize: 16, color: Colors.white),

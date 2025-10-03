@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:farmiq_app/providers/cart_provider.dart';
 import 'home_screen.dart';
-import 'support_screen.dart';
+import 'support_screen.dart'; // Using your new support screen
 import 'cart_screen.dart';
-// REMOVED: No longer need to import profile_screen here
+import 'profile_screen.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
@@ -16,11 +16,12 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   int _selectedIndex = 0;
 
-  // REMOVED: ProfileScreen is no longer part of the main pages
+  // This is the correct list of pages for your 4-tab layout
   static const List<Widget> _pages = <Widget>[
     HomeScreen(),
     SupportScreen(),
     CartScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -36,10 +37,9 @@ class _MainLayoutState extends State<MainLayout> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: const Color(0xFF3B5D46),
+        selectedItemColor: const Color(0xFF3B5D46), // Your theme color
         unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        // REMOVED: The BottomNavigationBarItem for Profile is gone
+        type: BottomNavigationBarType.fixed, // Ensures all labels are visible with 4 items
         items: <BottomNavigationBarItem>[
           const BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
@@ -52,6 +52,7 @@ class _MainLayoutState extends State<MainLayout> {
           BottomNavigationBarItem(
             icon: Consumer<CartProvider>(
               builder: (context, cart, child) {
+                // This will show a badge with the number of items in the cart
                 final itemCount = cart.cart?.items.length ?? 0;
                 return Badge(
                   label: Text('$itemCount'),
@@ -61,6 +62,10 @@ class _MainLayoutState extends State<MainLayout> {
               },
             ),
             label: 'Cart',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
           ),
         ],
       ),
