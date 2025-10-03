@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:farmiq_app/models/user.dart';
 import 'package:logging/logging.dart';
 import 'package:farmiq_app/models/cart_model.dart';
-import 'package:farmiq_app/models/ngo_model.dart';
+import 'package:farmiq_app/models/ngo_model.dart'; // Import the new NGO model
 
 class ApiService {
   final String _baseUrl = 'http://10.0.2.2:3000/api';
@@ -17,27 +17,33 @@ class ApiService {
     return prefs.getString('token');
   }
 
-  Future<Map<String, String>> _getHeaders() async {
-    final token = await _getToken();
-    return {
-      'Content-Type': 'application/json',
-      if (token != null) 'Authorization': 'Bearer $token',
-    };
-  }
-
   Future<User?> getUserProfile() async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/me'),
-      headers: await _getHeaders(),
-    );
-    if (response.statusCode == 200) {
-      return User.fromJson(json.decode(response.body));
+    final token = await _getToken();
+    if (token == null) {
+      return null;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/me'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return User.fromJson(json.decode(response.body));
+      }
+    } catch (e, stackTrace) {
+      _log.severe("Error fetching user profile", e, stackTrace);
     }
     return null;
   }
 
   Future<List<Product>> getProducts() async {
     final response = await http.get(Uri.parse('$_baseUrl/products'));
+
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((json) => Product.fromJson(json)).toList();
@@ -46,8 +52,10 @@ class ApiService {
     }
   }
 
+  // New function to get NGOs
   Future<List<NGO>> getNgos() async {
     final response = await http.get(Uri.parse('$_baseUrl/ngos'));
+
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((json) => NGO.fromJson(json)).toList();
@@ -56,40 +64,16 @@ class ApiService {
     }
   }
 
-  // --- THIS IS THE CORRECTED CODE ---
   Future<Cart> getCart() async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/cart'),
-      headers: await _getHeaders(),
-    );
-    if (response.statusCode == 200) {
-      return Cart.fromJson(json.decode(response.body));
-    } else {
-      _log.warning('Failed to load cart: ${response.statusCode}');
-      throw Exception('Failed to load cart');
-    }
+    // TODO: Implement actual API call
+    return Cart(id: '1', items: []);
   }
 
-  Future<void> addToCart(String productId, {int quantity = 1}) async {
-    final response = await http.post(
-      Uri.parse('$_baseUrl/cart/items'),
-      headers: await _getHeaders(),
-      body: json.encode({'productId': productId, 'qty': quantity}),
-    );
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      _log.warning('Failed to add item to cart: ${response.statusCode}');
-      throw Exception('Failed to add item to cart');
-    }
+  Future<void> addToCart(String productId, {required int quantity}) async {
+    // TODO: Implement actual API call
   }
 
   Future<void> deleteFromCart(String cartItemId) async {
-    final response = await http.delete(
-      Uri.parse('$_baseUrl/cart/items/$cartItemId'),
-      headers: await _getHeaders(),
-    );
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      _log.warning('Failed to delete item from cart: ${response.statusCode}');
-      throw Exception('Failed to delete item from cart');
-    }
+    // TODO: Implement actual API call
   }
 }
